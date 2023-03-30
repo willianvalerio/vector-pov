@@ -1,0 +1,39 @@
+[api]
+enabled = true
+address = "0.0.0.0:8686"
+
+[sources.demo_logs]
+type = "demo_logs"
+interval = 1.0
+format = "json"
+
+[sources.my_file_source]
+type = "file"
+include = [ "/var/log/arquivo.log"]
+
+[sources.my_file_source.multiline]
+start_pattern = '^[^\s]'
+mode = "continue_through"
+condition_pattern = '^[\s]+from'
+timeout_ms = 1000
+
+[sources.java_log]
+type = "file"
+include = [ "/var/log/java.log"]
+
+[sources.java_log.multiline]
+start_pattern = '\d{4}\-(0?[1-9]|1[012])\-(0?[1-9]|[12][0-9]|3[01])'
+mode = "continue_through"
+condition_pattern = '^[\s]+at'
+timeout_ms = 1000
+
+# [sinks.console]
+# inputs = ["my_file_source"]
+# target = "stdout"
+# type = "console"
+# encoding.codec = "json"
+
+[sinks.datadog]
+type = "datadog_logs"
+inputs = ["my_file_source", "java_log"]
+default_api_key = "${DD_API_KEY}"

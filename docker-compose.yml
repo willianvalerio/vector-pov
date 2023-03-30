@@ -1,0 +1,11 @@
+services:
+  vector:
+    image: timberio/vector:0.28.1-debian
+    environment:
+      - DD_API_KEY
+    volumes:
+      - $PWD/vector.toml:/etc/vector/vector.toml:ro
+      - $PWD/arquivo.log:/var/log/arquivo.log
+      - $PWD/java.log:/var/log/java.log
+    ports:
+      - 8686:8686
